@@ -26,3 +26,18 @@ function finalCleanup(html){
     const iFrameregex = /<iframe\b[^>]*>.*?<\/iframe>|<img\b[^>]*>/gi;
     return html.replace(iFrameregex, '').trim();
 }
+
+
+module.exports.linkedinScrapService = async (profileUrl) => {
+    try {
+        const browser = await puppeteer.launch({headless: false});
+        const page = await browser.newPage();
+        await page.goto(url)  
+                
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+}
