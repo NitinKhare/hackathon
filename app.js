@@ -26,11 +26,12 @@ app.get('/', (req, res) => {
 const leads = require('./routes/leads');
 const organisationInfo = require('./routes/orgInfo');
 const prompt = require('./routes/prompt');
+const email = require('./routes/emails');
 
 app.use('/leads', leads)
 app.use('/organisation-info', organisationInfo)
 app.use('/prompt', prompt)
-
+app.use('/email',email)
 // Routes End
 
 app.listen(port, () => {
