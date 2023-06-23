@@ -44,9 +44,12 @@ module.exports.createEmailReceived = async(emailData)=>{
     }
 }
 
-module.exports.sendEmailViaId = async(id)=>{
+module.exports.sendEmailViaId = async(id, force = false)=>{
     try {
         const getEmail = await Email.findOne({_id:id});
+        if(getEmail.emailSent.toLowerCase() == "yes" && !force){
+            return {success: false, message: "EMAIL_ALREADY_SENT"}
+        }
         console.log("getEmail -------->", getEmail)
         if(!getEmail){
             throw new Error('No Such Email');

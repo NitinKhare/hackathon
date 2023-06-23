@@ -19,8 +19,7 @@ router.post("/", async(req, res)=>{
 
 router.get("/send-email/:id", async(req, res)=>{
     try{
-        console.log("here =======>", req.params.id)
-        const emailSend = await sendEmailViaId(req.params.id);
+        const emailSend = await sendEmailViaId(req.params.id, req?.query?.forced);
         return res.send(emailSend);
     }catch(e){
         return res.status(INTERNAL_SERVER_ERROR.code).json({
