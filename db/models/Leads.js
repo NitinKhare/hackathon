@@ -13,7 +13,15 @@ const leadsSchema = new Schema({
   status: {type: String, enum : ['UNPROCESSED','PROCESSING','PROCESSED'], default: "UNPROCESSED"},
   websiteHomePageData: String,
   websiteAboutPageData: String,
-  linkedinIdScrappedData: String
+  linkedinIdScrappedData: String,
+  employeeCount: Number,
+  industryType: String,
+  keywords: String,
+  city: String,
+  State: String,
+  Country: String,
+  CompanyAddresss: String,
+  context: String,
 });
 
 module.exports = mongoose.model("leads", leadsSchema);

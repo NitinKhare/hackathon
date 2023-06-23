@@ -1,6 +1,10 @@
 const {Worker} = require('bullmq');
 const { getPageContent } = require('../services/Scraper');
 const Leads = require('../db/models/Leads');
+const OrganisationInfo = require('../db/models/OrganisationInfo');
+const { upsertOrganisationInfo } = require('../services/OrganisationInfo');
+const { generateEmail } = require('../services/openAI');
+const LeadsData = require('../db/models/LeadsData');
 require('dotenv').config({path:__dirname+'/../.env'});
 
 require('../db/connect');
@@ -15,19 +19,37 @@ const worker = new Worker('leads', async job => {
         }
         await Leads.findByIdAndUpdate(lead._id, {status: "PROCESSING"})
         const getHomePageData = await scrapDataFromWebsite(lead.organisationUrl);
-        const leadUpdateObject = {
+        const OrganisationInfoObject = {
             websiteHomePageData: null,
             websiteAboutPageData: null,
-            status:"PROCESSED"
+            generatedKeywords: lead.keywords,
+            companyContext: lead.context
         }
         if(getHomePageData.success){
-            leadUpdateObject.websiteHomePageData = getHomePageData.data
+            OrganisationInfoObject.websiteHomePageData = getHomePageData.data
         }
-        const getAboutPageData = await scrapDataFromWebsite(lead.aboutPage);
+        let getAboutPageData = await scrapDataFromWebsite(lead.aboutPage);
         if(getAboutPageData.success){
-            leadUpdateObject.websiteAboutPageData =  getAboutPageData.data
+            OrganisationInfoObject.websiteAboutPageData =  getAboutPageData.data
+            if(getAboutPageData.data && typeof getAboutPageData.data == 'string' && (getAboutPageData.data.toLowerCase().includes('page not found') || getAboutPageData.data.includes('404'))){
+                getAboutPageData = await scrapDataFromWebsite(lead.organisationUrl +"/about-us");
+                if(getAboutPageData.success && !(getAboutPageData.data.includes('Page Not Found') || getAboutPageData.data.includes('404')) ){
+                    OrganisationInfoObject.websiteAboutPageData = getAboutPageData.data
+                }else{
+                    OrganisationInfoObject.websiteAboutPageData = null;
+
+                }
+            }else{
+                OrganisationInfoObject.websiteAboutPageData = null;
+            }
         }
-        await Leads.findByIdAndUpdate(lead._id, leadUpdateObject)
+        await upsertOrganisationInfo(lead, OrganisationInfoObject);
+        await Leads.findByIdAndUpdate(lead._id, {status: "PROCESSED"})
+    }
+
+    if(job.name === 'orgInfo'){
+        console.log("data ====>", job.data);
+        await generateEmailContent(job.data.id, job.data.leadId)
     }
 }catch(e){
     console.error(e)
@@ -51,4 +73,32 @@ const scrapDataFromWebsite = async(url) =>{
     }
 }
 
+
+const generateEmailContent = async (orgInfoId, leadId) =>{
+    try{
+        console.log("generateEmailCOntent ")
+        const orgInfo = await OrganisationInfo.findById(orgInfoId);
+        if(!orgInfo){
+            throw new Error('No orgInfo found');
+        }
+        const lead = await Leads.findById(leadId);
+        if(!leadId){
+            throw new Error("No LeadId found");
+        }
+        console.log("orgInfo ============>", orgInfo)
+        const email = await generateEmail({
+            email : lead.email,
+            LeadName: lead.name,
+            companyName: lead.organisationName,
+            companySize: lead.organisationSize,
+            companyContext: orgInfo.companyContext,
+            companyHomePage: orgInfo.websiteHomePageData,
+            companyAboutPage: orgInfo.websiteAboutPageData
+        })
+        console.log("EMAIL : generated ====>", email)
+    }catch(e){
+        console.log("error in generating email ======>", e)
+        return {success: false, message: e.message}
+    }
+}
 

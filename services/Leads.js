@@ -1,22 +1,16 @@
-const res = require('express/lib/response');
 const Leads = require('../db/models/Leads');
+const queue = require('../queue');
 const leadsValidator = require('../validators/Leads');
-const {Queue, tryCatch} =require('bullmq');
-
-
-
-const queue = new Queue('leads',{ connection: {
-  host: "127.0.0.1",
-  port: 6379
-}});
-
 module.exports.create = async (leadObject)=>{
     try{
         const isValid= leadsValidator.create.validate(leadObject);
         if(isValid.error){
             throw new Error(isValid.error.message)
         }
-        const doesLeadExist = await this.find({organisationUrl: leadObject.organisationUrl});
+        if(leadObject.organisationUrl[leadObject.organisationUrl.length -1] == "/"){
+            leadObject.organisationUrl = leadObject.organisationUrl.slice(0, leadObject.organisationUrl.length -1)
+        }
+        const doesLeadExist = await this.find({email: leadObject.email, organisationUrl: leadObject.organisationUrl});
         if(!doesLeadExist.success){
             return {success: false, message: 'DB_ERROR'}
         }

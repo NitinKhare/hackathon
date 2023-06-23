@@ -9,22 +9,81 @@ const openai = new OpenAIApi(configuration);
 const model = "gpt-3.5-turbo"
 const temperature = 0.8
 
-const ABOUT_PLUM = ``;
+const ABOUT_PLUM = `
+Plum which is the Best employee benefits and digital healthcare platform in India.
+ Get transparent pricing & a quick online purchase experience with Plum Insurance
+ . Our aspiration to make access to care easier in companies pushed us to dive deeper into 
+ the basics, i.e. health. With a common inclination towards building products people love,
+  our founders set out to speak with teams of all kinds, only to discover that the
+   insurance system was broken! And here we are, solving the hairy world of insurance -
+    imagining and co-creating products from the ground up to positively impact the 
+    health and financial wellbeing of every human as we go. 
+    The USPs of Plum are: Comprehensive medical insurance from India's leading insurers and a suite of preventive health benefits, Modern benefits including LGBTQ cover and mental illness cover, Plum mobile application to increase employee adoption and HRMS integration for the ease of HR operations, Assisted claims filing through WhatsApp and 24*7 cashless support
 
-async function generateEmail(){
-    const details =`"List HotelHelp & Support Login / Sign upHourly Hotels#SHORTSTAY with India’s best hourly hotel BrandChoose hotels from all major cities in IndiaWhere ?When ?23 Jun 23What Time ?01:00 AMSearchExplore By CitiesMumbaiDelhiKolkataBangaloreHyderabadChennaiNoidaGurgaonPuneAll CitiesStay Smartly Pay Hourly Flexible Check-inNo more just the fixed Hotel Times, Choose your own Check in and out timesBest PricesWe provide best prices across 70+ cities, You can save upto 70%  on Hourly ratesBook Now Pay at HotelWe provide multiple payment methods, You can book now and do the payment at hotel.Download Our App Join family of over 1.5 Million customers10% Additional off with wallet paymentRefer Friends to earn wallet pointsApp Exclusive Offers, Upto 25% OFFBenefits of Hourly StayNight StayGet late night Check in with our 12 hrslot and Pay only for nightCouplesWe welcome unmarried or marriedcouples with best pricesBusiness MeetingsBook Fancy Hotels for meetings andpay just for hoursFrequent TravelYou travel a lot? then why pay for full day at hotel, get 3, 6 and 12 hourspackages from usOur Milestones70+Cities4000+Hotels400K+CustomersOur Testimonials Great concept!! Efficient and very economical for short stays!!Shraddha ThakurSee AllAwesome!! Keep going. More and more will make it better...So keeep expanding your services! :)Ralph Raymond DiasLoved the services couple friendly and affordable prices...Hotel rooms now booked for hours wow thts awsome....Hope to see u guys expanding to other cities too.Kanishka VermaVery nice service hourly pay no question asked by hotel staff safe place for couple 👍👍Anshu BadsiwalThe idea of a flexible check-in and check-out with pay only for  hours you stay is great for business travelers. Loved the concept. Keep up the great work!Somendra SinghGreat concept!! Efficient and very economical for short stays!!Shraddha ThakurSee AllAwesome!! Keep going. More and more will make it better...So keeep expanding your services! :)Ralph Raymond DiasLoved the services couple friendly and affordable prices...Hotel rooms now booked for hours wow thts awsome....Hope to see u guys expanding to other cities too.Kanishka VermaVery nice service hourly pay no question asked by hotel staff safe place for couple 👍👍Anshu BadsiwalThe idea of a flexible check-in and check-out with pay only for  hours you stay is great for business travelers. Loved the concept. Keep up the great work!Somendra SinghGreat concept!! Efficient and very economical for short stays!!Shraddha ThakurSee AllBrevistay in the media This pay-per-hour startup enables travellers to book short-duration hotel staysRead Full ArticleBrevistay has created a benchmark in the Indian tourism sector by introducing the micro-stay hotel bookings.Read Full ArticleRevolutionizing the concept of Micro stay in India, Brevistay is an answer to a cost-effective way for a short stayRead Full ArticleBrevistay is spreading the message of freedom to book hotel rooms at any time of the day or nightRead Full ArticleOn Valentine's Day, This Startup Is Making It Possible For Couples To Rent Rooms On An Hourly BasisRead Full ArticleBrevistay believes in flexibility and affordability and hence has introduced the concept of hourly stayRead Full ArticleBrevistay Blog PostsHourly Hotels in India for Women Entrepreneurs: Ideal Spaces to Work and Network In today's fast-paced world, where the concept of traditional office space is changing, finding the perfect workspace can be daunting for many Read Full ArticleBrevistay's Hilarious Prank: Dating on a Hotel App Being the fifth fastest-growing online dating app market in the world, India has many dating app users who do not mind shelling money out of their pockets Read Full Article12 Summer Getaways in India: Best Destinations for Families with Kids Summer vacations are right around the corner, and the vacation game is about to begin. But where to take off, especially when you have kids in the Read Full Article70 Perfect First Date Ideas on a Budget Do you want to make an impression on your crush and give them a day they will not simply forget? Particularly when you're attempting to get to know a new Read Full ArticleBrevistay - FAQs  Why should we book rooms with Brevistay? In which all cities it is possible to get Brevistay? Can people with local id book hotel rooms with brevistay?Are Brevistay partnered hotels safe? We are an unmarried couple and one of us is below 18 years of age. Can we still book an hourly hotel room?Are unmarried couples allowed to check-in?View More FAQsHourly Hotels at Brevistay Across IndiaHourly Hotels in HyderabadHourly Hotels in DelhiHourly Hotels in GurgaonHourly Hotels in BangaloreHourly Hotels in MysoreHourly Hotels in MumbaiHourly Hotels in Navi MumbaiHourly Hotels in ChandigarhHourly Hotels in JaipurHourly Hotels in ChennaiHourly Hotels in LucknowHourly Hotels in NoidaHourly Hotels in KolkataHourly Hotels in GhaziabadHourly Hotels in HaridwarHourly Hotels in PuneHourly Hotels in VijayawadaHourly Hotels in AgraHourly Hotels in GoaHourly Hotels in PatnaHourly Hotels in AhmedabadHourly Hotels in GangtokHourly Hotels in VisakhapatnamHourly Hotels in BhopalHourly Hotels in SuratLoad More Brevistay is the fastest growing hourly hotel brand in India. Starting off with just five cities, we have grown by leaps and bounds to be currently operating with over 10,000+ rooms in 4000++ hotels across 70++ cities in India. With us, your rescue to find hotel rooms for a few hours is no longer a problem! We’ll help you get hourly rooms for 3 hours, 6 hours, and 12 hours and pay accordingly. Be it a flight delay, a brief layover or a short meeting with clients and you need a room for a few hours, we will always have a solution with everything at super affordable prices. Microstay is the new revolution in the Indian hospitality industry, and is all set to gain more momentum over time. Also, we ensure every hotel listed on our website is completely safe and secure. A rigorous quality check of hotels happens before on-boarding. We do ensure a smooth check-in procedure for our guests.Follow Us  © 2023 Brevistay Hospitality Pvt. Ltd. All rights reservedAbout usBrevistay BlogContact UsFAQsTerms & ConditionsPrivacy PolicyRefer & EarnCareersWe are HiringAre you a Hotelier? Join BrevistayWe are rapidly growing in every major cities, We have great partnerships with over 4000+ Hotels, You are welcome to become a part of Brevistay.List Your Hotel To get regular updates on offers and services join our NewsletterSubscribe"`
+    Whenever you generate a cold email add a personal touch with the 
+    information of the company we provide you with. Talk more about the company we are selling to then about Plum
+`;
+/*
+Structure of details
+{
+    email: String,
+    LeadName:String
+    companyName: String,
+    companyContext: String,
+    keywords: String,
+    companyHomePage:String,
+    companyAboutPage: String
+}
+
+
+
+*/
+function parseDetailsAsPrompt(details){
+    let text = ""
+    console.log("details ========>", details)
+    if(details.leadName){
+        text +=" The Person to Contact is "+details.LeadName;
+    }
+    if(details.email){
+        text += " We have to send email to : "+details.email;
+    }
+    if(details.companyName){
+        text += " The name of the company is "+details.companyName;
+    }
+    if(details.companySize){
+        text += " The size of the company is : "+details.companySize;
+    }
+    if(details.keywords){
+        text += " The company is associated with following keywords : "+details.keywords; 
+    }
+    if(details.companyContext){
+        text += " Here is what we got to know about the company : "+details.companyContext; 
+    }
+    if(details.companyHomePage){
+        text += " Here is what we extracted from the company's website home page : "+details.companyHomePage;
+    }
+    if(details.companyAboutPage){
+        text += "Here is what the company publicly say about themselves "+ details.companyAboutPage;
+    }
+
+    return text;
+}
+
+module.exports.generateEmail = async(details)=>{
+
+    let text = parseDetailsAsPrompt(details)
+    console.log("text ===>",text);
     const response = await openai.createChatCompletion({
         model,
         messages:[{
             'role': 'system',
-            content: 'You are an expert cold email writer. Your task is to generate personalized cold email on the basis of customer Data and infromation we provide to you to sell our product which is named Plum Here is the description about Plum which is the Best employee benefits and digital healthcare platform in India. Get transparent pricing & a quick online purchase experience with Plum Insurance. and its background story is Founded in 2019, Plum started out with the mission to insure 10 million people in India by 2025. Our aspiration to make access to care easier in companies pushed us to dive deeper into the basics, i.e. health. With a common inclination towards building products people love, our founders set out to speak with teams of all kinds, only to discover that the insurance system was broken! And here we are, solving the hairy world of insurance - imagining and co-creating products from the ground up to positively impact the health and financial wellbeing of every human as we go. Whenever you generate a cold email add a personal touch with the information of the company we provide you with. Talk more about the company we are selling to then about Plum'
+            content: 'You are an expert cold email writer. Your task is to generate personalized cold email on the basis of customer Data and infromation we provide to you to sell our product which is named Plum Here is the description about Plum :'+ABOUT_PLUM
         },{
             role: 'user',
-            content: 'Write me a email selling our product plum to the company named brevistay, here is the description we found about the company, '+details
+            content: `Write me a email selling our product plum to the company named ${details.companyName}, here is the description we found about the company, `+text +". Add personal touch based on the description we gave to you in the email"
         }],
         temperature,
       });
       console.log(JSON.stringify(response.data, null ,2))
+      return response.data;
     } 
-
-    generateEmail()

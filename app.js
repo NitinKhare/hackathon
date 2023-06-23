@@ -8,7 +8,6 @@ const pino = require('pino-http')();
 
 
 
-
 app.use(pino)
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -23,9 +22,10 @@ app.get('/', (req, res) => {
 
 //Routes Setup
 const leads = require('./routes/leads');
+const organisationInfo = require('./routes/orgInfo');
 
 app.use('/leads', leads)
-
+app.use('/organisation-info', organisationInfo)
 
 // Routes End
 

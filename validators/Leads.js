@@ -7,4 +7,4 @@ module.exports.create = Joi.object({
     processed: Joi.string(),
     email: Joi.string().required(),
     aboutPage: Joi.string().uri()
-})
+}).unknown(true)
