@@ -5,7 +5,8 @@ require('dotenv').config();
 require('./db/connect');
 const port = process.env.NODE_PORT || 3000;
 const pino = require('pino-http')();
-
+const cors = require('cors')
+app.use(cors())
 
 
 app.use(pino)
