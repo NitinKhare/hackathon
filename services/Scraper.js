@@ -23,8 +23,9 @@ module.exports.getPageContent = async (url) => {
 }
 
 function finalCleanup(html){
-    const iFrameregex = /<*\b[^>]*>.*?<\/*>|<*\b[^>]*>/gi;
-    return html.replace(iFrameregex, '').trim();
+    const iFrameregex = /<\s*(?:button|img|iframe|a)\b[^>]*>(.*?)<\s*\/\s*(?:button|img|iframe|a)\s*>/g
+    html = html.replace(iFrameregex, '').trim();
+    return html.replace(/[^\w\s]|[\t\n]/g, ' ').slice(0, 1000)
 }
 
 
