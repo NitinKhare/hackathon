@@ -22,6 +22,8 @@ const leadsSchema = new Schema({
   Country: String,
   CompanyAddresss: String,
   context: String,
+  abmName: String,
+  autoSend: Boolean
 });
 
 module.exports = mongoose.model("leads", leadsSchema);

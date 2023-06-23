@@ -3,7 +3,6 @@ const queue = require('../queue');
 
 module.exports.find = async (filter={})=>{
     try{
-        console.log("organisationFInd ====>",filter);
         const result = await OrganisationInfo.find(filter);
         return {success: true, data: result}
     }catch(e){

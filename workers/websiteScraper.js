@@ -5,6 +5,8 @@ const OrganisationInfo = require('../db/models/OrganisationInfo');
 const { upsertOrganisationInfo } = require('../services/OrganisationInfo');
 const { generateEmail } = require('../services/openAI');
 const LeadsData = require('../db/models/LeadsData');
+const { create } = require('../services/Email');
+const { sendEmail } = require('../services/emailNotification');
 require('dotenv').config({path:__dirname+'/../.env'});
 
 require('../db/connect');
@@ -23,7 +25,8 @@ const worker = new Worker('leads', async job => {
             websiteHomePageData: null,
             websiteAboutPageData: null,
             generatedKeywords: lead.keywords,
-            companyContext: lead.context
+            companyContext: lead.context,
+            autoSend: lead.autoSend || false
         }
         if(getHomePageData.success){
             OrganisationInfoObject.websiteHomePageData = getHomePageData.data
@@ -93,11 +96,28 @@ const generateEmailContent = async (orgInfoId, leadId) =>{
             companySize: lead.organisationSize,
             companyContext: orgInfo.companyContext,
             companyHomePage: orgInfo.websiteHomePageData,
-            companyAboutPage: orgInfo.websiteAboutPageData
+            companyAboutPage: orgInfo.websiteAboutPageData,
+            abmName: lead.abmName || "Sarvesh Singh"
         })
-        console.log("EMAIL : generated ====>", email)
+        let createdEmail = await create({organisationInfo: orgInfoId,email:lead.email ,emailContent: email.message, autoSend: lead.autoSend || false})
+        console.log("createdEmail ", createdEmail);
+        //parsing logic
+        let textMessage =  email.message.split('\n')
+        let subject = textMessage[0].split(`Subject:`).pop()
+        let body =  textMessage.splice(1, textMessage.length)
+        console.log("textMessage =====>",subject)
+        let text = "";
+        for(let i =0; i<body.length; i++){
+            text +=body[i]+"\n"
+        }
+        await sendEmail({
+            from:process.env.GMAIL_ID,
+            to:lead.email,
+            subject: subject,
+            text: text
+        })
     }catch(e){
-        console.log("error in generating email ======>", e)
+        console.log("error in generating email ======>", JSON.stringify(e, null, 2))
         return {success: false, message: e.message}
     }
 }
