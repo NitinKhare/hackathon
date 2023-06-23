@@ -23,7 +23,7 @@ module.exports.getPageContent = async (url) => {
 }
 
 function finalCleanup(html){
-    const iFrameregex = /<iframe\b[^>]*>.*?<\/iframe>|<img\b[^>]*>/gi;
+    const iFrameregex = /<*\b[^>]*>.*?<\/*>|<*\b[^>]*>/gi;
     return html.replace(iFrameregex, '').trim();
 }
 

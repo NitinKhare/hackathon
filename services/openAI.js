@@ -1,5 +1,6 @@
 require('dotenv').config({path:__dirname+'/../.env'})
 const { Configuration, OpenAIApi } = require("openai");
+const { find } = require('./Prompt');
 const configuration = new Configuration({
     organization: process.env.OPENAI_ORG_ID,
     apiKey: process.env.OPENAI_API_KEY,
@@ -45,10 +46,13 @@ Structure of details
 */
 function parseDetailsAsPrompt(details){
     let text = ""
-    console.log("details ========>", details)
     if(details.leadName){
-        text +=" The Person to Contact is "+details.LeadName;
+        text+=" The Person to Contact is "+details.LeadName;
     }
+    if(details.leadDesignationName){
+        text+=" The contact's designation is :  "+details.leadDesignationName;
+    }
+
     if(details.email){
         text += " We have to send email to : "+details.email;
     }
@@ -58,6 +62,12 @@ function parseDetailsAsPrompt(details){
     if(details.companySize){
         text += " The size of the company is : "+details.companySize;
     }
+    if(details.industryType){
+        text +=" THe company operates in the sector : "+details.industryType;
+    }
+    if(details.employeeCount){
+        text += " The no of employees in the company is : "+details.employeeCount;
+    }
     if(details.keywords){
         text += " The company is associated with following keywords : "+details.keywords; 
     }
@@ -65,10 +75,10 @@ function parseDetailsAsPrompt(details){
         text += " Here is what we got to know about the company : "+details.companyContext; 
     }
     if(details.companyHomePage){
-        text += " Here is what we extracted from the company's website home page : "+details.companyHomePage;
+        text += " Here is what we extracted from the company's website home page : "+details.companyHomePage.replace(/\n|\r|\t|\s{2,}/g, " ");
     }
     if(details.companyAboutPage){
-        text += "Here is what the company publicly say about themselves "+ details.companyAboutPage;
+        text += "Here is what the company publicly say about themselves "+ details.companyAboutPage.replace(/\n|\r|\t|\s{2,}/g, " ");
     }
     if(details.abmName){
         text += ` My name is ${details.abmName} add it to the email signature`
@@ -80,19 +90,29 @@ function parseDetailsAsPrompt(details){
 module.exports.generateEmail = async(details)=>{
 
     let text = parseDetailsAsPrompt(details)
-    console.log("text ===>",text);
+    let content= 'You are an expert cold email writer. Your task is to generate personalized cold email on the basis of customer Data and infromation we provide to you to sell our product which is named Plum Here is the description about Plum :'+ABOUT_PLUM + " Generated email must be formatted and should not contain any escape sequence characters";
+
+    if(details.promptAlias){
+        const getPrompt = await find({alias: details.promptAlias});
+        if(!getPrompt.success){
+            throw new Error(getPrompt.message);
+        }
+        if(!getPrompt.data){
+            throw new Error('Invalid prompt Alias provided')
+        }
+        content = getPrompt.data.prompt;
+    }
     const response = await openai.createChatCompletion({
         model,
         messages:[{
             'role': 'system',
-            content: 'You are an expert cold email writer. Your task is to generate personalized cold email on the basis of customer Data and infromation we provide to you to sell our product which is named Plum Here is the description about Plum :'+ABOUT_PLUM + " Generated email must be formatted and should not contain any escape sequence characters"
+            content: content
         },{
             role: 'user',
             content: `Write me a email selling our product plum to the company named ${details.companyName}, here is the description we found about the company, `+text +". Add personal touch based on the description we gave to you in the email"
         }],
         temperature,
       });
-      console.log(JSON.stringify(response.data, null ,2))
       if(response?.data?.choices[0]?.message?.content){
         return {success: true, message: `${response?.data?.choices[0]?.message?.content}`}
       }

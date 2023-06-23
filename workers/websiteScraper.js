@@ -6,9 +6,13 @@ const { upsertOrganisationInfo } = require('../services/OrganisationInfo');
 const { generateEmail } = require('../services/openAI');
 const LeadsData = require('../db/models/LeadsData');
 const { create } = require('../services/Email');
+const leads = require('../services/Leads');
 const { sendEmail } = require('../services/emailNotification');
 require('dotenv').config({path:__dirname+'/../.env'});
-
+const fs = require('fs');
+const csv = require('csv-parser');
+const queue = require('../queue');
+const Email = require('../db/models/Email');
 require('../db/connect');
 
 const worker = new Worker('leads', async job => {
@@ -54,6 +58,14 @@ const worker = new Worker('leads', async job => {
         console.log("data ====>", job.data);
         await generateEmailContent(job.data.id, job.data.leadId)
     }
+
+    if(job.name == 'bulkupload'){
+        await parseCSV(job.data)
+    }
+
+    if(job.name == "mail"){
+        await sendEmailQueue(job.data)
+    }
 }catch(e){
     console.error(e)
 }
@@ -79,7 +91,6 @@ const scrapDataFromWebsite = async(url) =>{
 
 const generateEmailContent = async (orgInfoId, leadId) =>{
     try{
-        console.log("generateEmailCOntent ")
         const orgInfo = await OrganisationInfo.findById(orgInfoId);
         if(!orgInfo){
             throw new Error('No orgInfo found');
@@ -88,7 +99,6 @@ const generateEmailContent = async (orgInfoId, leadId) =>{
         if(!leadId){
             throw new Error("No LeadId found");
         }
-        console.log("orgInfo ============>", orgInfo)
         const email = await generateEmail({
             email : lead.email,
             LeadName: lead.name,
@@ -97,28 +107,90 @@ const generateEmailContent = async (orgInfoId, leadId) =>{
             companyContext: orgInfo.companyContext,
             companyHomePage: orgInfo.websiteHomePageData,
             companyAboutPage: orgInfo.websiteAboutPageData,
-            abmName: lead.abmName || "Sarvesh Singh"
+            abmName: lead.abmName || "Sarvesh Singh",
+            promptAlias: lead.promptAlias
         })
-        let createdEmail = await create({organisationInfo: orgInfoId,email:lead.email ,emailContent: email.message, autoSend: lead.autoSend || false})
-        console.log("createdEmail ", createdEmail);
         //parsing logic
         let textMessage =  email.message.split('\n')
-        let subject = textMessage[0].split(`Subject:`).pop()
+        let subject = toTitleCase(textMessage[0].split(`Subject:`).pop())
         let body =  textMessage.splice(1, textMessage.length)
-        console.log("textMessage =====>",subject)
         let text = "";
         for(let i =0; i<body.length; i++){
             text +=body[i]+"\n"
         }
-        await sendEmail({
-            from:process.env.GMAIL_ID,
-            to:lead.email,
-            subject: subject,
-            text: text
+        let createdEmail = await create({
+            organisationInfo: orgInfoId,
+            email:lead.email ,
+            emailContent: email.message, 
+            emailSubject: subject,
+            emailBody: text,
+            autoSend: lead.autoSend || false
         })
+        if(lead.autoSend){
+            queue.add("mail", {id: createdEmail.data._id})
+        }
+
     }catch(e){
         console.log("error in generating email ======>", JSON.stringify(e, null, 2))
         return {success: false, message: e.message}
+    }
+}
+
+let toTitleCase=(str)=> {
+    return str.toLowerCase().replace(/(?:^|\s)\w/g, function(match) {
+      return match.toUpperCase();
+    });
+  }
+const sendEmailQueue = async(data)=>{
+try{
+    const emailById = await Email.findById(data.id)
+    console.log("Email queue -====>",emailById);
+    sendEmail({
+        from:process.env.GMAIL_ID,
+        to:emailById.email,
+        subject: toTitleCase(emailById.emailSubject),
+        text: emailById.emailBody
+    }).then(async()=>{
+        await Email.updateOne({_id: emailById._id}, {emailSent:"YES"})
+    }).reject(async()=>{
+        await Email.updateOne({_id: emailById._id}, {emailSent:"ERRORED"})
+    })
+}catch(e){
+
+    console.error(e)
+}
+}
+const parseCSV = async(csvFileBuffer) =>{
+    try {
+        let results = [];
+        console.log()
+        fs.createReadStream(__dirname+'/../uploads/'+csvFileBuffer.fileName)
+        .pipe(csv())
+        .on('data', async (data) => {
+            const leadObject = {
+                organisationName: data.Company,
+                organisationUrl: data.Website,
+                employeeCount: data?.Employees,
+                leadName: data['First Name']+" "+data["Last Name"],
+                leadLinkedinId: data["Person Linkedin Url"],
+                industryType: data["Industry"],
+                keywords: data["Keywords"],
+                city: data["City"],
+                State: data["State"],
+                Country: data["Country"],
+                CompanyAddresss: data["Company Address"],
+                autoSend: csvFileBuffer.send,
+                email:data["Email"],
+                leadDesignation: csvFileBuffer["Title"],
+                autoSend: csvFileBuffer.autoSend
+            }
+            await leads.create(leadObject)
+        })
+        .on('end', () => {
+          console.log(results);
+        });    } catch (error) {
+        console.log(error)
+        return {success: false, message: error.message}
     }
 }
 

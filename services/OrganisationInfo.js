@@ -14,9 +14,7 @@ module.exports.find = async (filter={})=>{
 
 module.exports.upsertOrganisationInfo = async(lead, OrganisationInfoObject) =>{
     try{
-        console.log("upsert org info", lead, OrganisationInfoObject)
         let orgInfo = await OrganisationInfo.findOne({organisationUrl: lead.organisationUrl});
-        console.log("orgInfo =====>", orgInfo);
         if(!orgInfo){
             const organisationInfo = new OrganisationInfo({...OrganisationInfoObject, organisationUrl: lead.organisationUrl});
             orgInfo = await organisationInfo.save();
@@ -25,8 +23,6 @@ module.exports.upsertOrganisationInfo = async(lead, OrganisationInfoObject) =>{
                 ...orgInfo._doc,
                 ...OrganisationInfoObject
             }
-            delete mergedInfo._idl
-            console.log("merged ====>", mergedInfo)
             await OrganisationInfo.updateOne({organisationUrl:lead.organisationUrl}, mergedInfo)
         }
         await queue.add('orgInfo', { id: orgInfo._id, leadId: lead._id });

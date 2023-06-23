@@ -20,7 +20,6 @@ const mailOptions = {
 
   */
 module.exports.sendEmail = (mailOptions)=>{
-    console.log("sending email", mailOptions)
     return new Promise((resolve, reject)=>{
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {

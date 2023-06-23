@@ -21,11 +21,14 @@ app.get('/', (req, res) => {
 
 
 //Routes Setup
+
 const leads = require('./routes/leads');
 const organisationInfo = require('./routes/orgInfo');
+const prompt = require('./routes/prompt');
 
 app.use('/leads', leads)
 app.use('/organisation-info', organisationInfo)
+app.use('/prompt', prompt)
 
 // Routes End
 

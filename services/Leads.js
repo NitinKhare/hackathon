@@ -46,7 +46,7 @@ module.exports.updateStatusByOrganisationUrl = async(organisationUrl, status = '
             throw new Error("Invalid Or no organisationFound");
         }
         const result = await Leads.findOneAndUpdate({organisationUrl: organisationUrl}, {status: status})
-        console.log(result);
+        return {success: true, data: result}
     }catch(e){
         return {success: false, message: e.message}
     }
