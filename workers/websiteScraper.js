@@ -152,7 +152,7 @@ try{
         text: emailById.emailBody
     }).then(async()=>{
         await Email.updateOne({_id: emailById._id}, {emailSent:"YES"})
-    }).reject(async()=>{
+    }).catch(async()=>{
         await Email.updateOne({_id: emailById._id}, {emailSent:"ERRORED"})
     })
 }catch(e){
