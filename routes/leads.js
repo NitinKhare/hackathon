@@ -7,7 +7,7 @@ const multer  = require('multer')
 const queue = require('../queue');
 const  BufferStream  = require('../services/BufferStream');
 const csv = require('csv-parser');
-
+const prompt = require("../services/Prompt")
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -77,7 +77,8 @@ router.get("/frontend/leadsForm",async(req, res)=>{
         const data = {
             error:null
           };
-          return res.render('LeadsForm', data);
+          const getAllPrompt = await prompt.find();
+          return res.render('LeadsForm', {...data, prompts: getAllPrompt?.data || []});
 
     } catch (error) {
         res.status(500).json({success: false, message: error.message})

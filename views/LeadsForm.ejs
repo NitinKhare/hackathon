@@ -69,8 +69,13 @@
         <input type="text" class="form-control" id="leadLinkedinId"  name="context" placeholder="Enter some context about the organization" >
       </div>
       <div class="form-group">
-        <label for="organizationUrl">Prompt Alias</label>
-        <input type="text" class="form-control" id="leadLinkedinId"  name="promptAlias" placeholder="Enter the prompt to use for organization" >
+        <label for="prompt">prompts</label>
+    <select class="form-control" id="prompt" name="prompt">
+      <% for (let i = 0; i < prompts.length; i++) { %>
+      <option value="<%= prompts[i].alias %>"><%= prompts[i].alias %>"</option>
+      <% } %>
+
+    </select>
       </div>
       <div class="form-group form-check">
         <input type="checkbox" class="form-check-input" id="autosend" name="autosend">
