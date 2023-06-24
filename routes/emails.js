@@ -20,6 +20,10 @@ router.post("/", async(req, res)=>{
 router.get("/send-email/:id", async(req, res)=>{
     try{
         const emailSend = await sendEmailViaId(req.params.id, req?.query?.forced);
+        if(req?.query?.returnBackToDescription){
+            const emails = await find({_id: req.params.id});
+            return res.render("EmailDescriptionPage", {data:emails?.data[0] || {}})
+        }
         return res.send(emailSend);
     }catch(e){
         return res.status(INTERNAL_SERVER_ERROR.code).json({
@@ -39,4 +43,12 @@ router.get("/frontend",async(req, res)=>{
     }
 })
 
+router.get("/:id/frontend",async(req, res)=>{
+    try {
+        const emails = await find({_id: req.params.id});
+       return res.render("EmailDescriptionPage", {data: emails.data[0] || {}})
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message})
+    }
+})
 module.exports = router;
