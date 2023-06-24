@@ -27,7 +27,14 @@ const upload = multer({ dest: 'uploads/' });
 
 router.post("/", async(req, res)=>{
     try{
+        console.log("Creationg data =======>", req.body)
         const created = await create(req.body)
+        if(created.success == false){
+            return res.render('LeadsForm', {error : created.message, data:req.body});
+        }
+        if(req.query.frontend){
+            return res.redirect("/leads/frontend")
+        }
         return res.json(created)
     }catch(e){
         return res.status(INTERNAL_SERVER_ERROR.code).json({
@@ -53,7 +60,9 @@ router.get("/", async(req, res)=>{
 router.post("/bulk-upload",upload.single('data'), async(req, res)=>{
     try {   
         queue.add('bulkupload', {fileName: req.file.filename, autoSend: req.query.send})
-
+        if(req.query.frontend){
+            return res.redirect("/leads/frontend")
+        }
         res.send()
     } catch (e) {
         return res.status(INTERNAL_SERVER_ERROR.code).json({
@@ -63,4 +72,32 @@ router.post("/bulk-upload",upload.single('data'), async(req, res)=>{
     }
 })
 
+router.get("/frontend/leadsForm",async(req, res)=>{
+    try {
+        const data = {
+            error:null
+          };
+          return res.render('LeadsForm', data);
+
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message})
+    }
+})
+
+router.get("/frontend/leadsUploadForm",async(req, res)=>{
+    try {
+          return res.render('LeadsUploadForm', data);
+
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message})
+    }
+})
+router.get("/frontend",async(req, res)=>{
+    try {
+       return res.send("jello")
+
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message})
+    }
+})
 module.exports = router;

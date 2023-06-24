@@ -1,0 +1,93 @@
+<!-- form.html -->
+<html>
+<head>
+  <title>Create New Lead</title>
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f8f9fa; /* Slightly grey background color */
+    }
+    .form-container {
+      max-width: 400px;
+      width: 100%;
+      border: 1px solid #ccc; /* Border around the form */
+      border-radius: 4px;
+      background-color: #fff; /* White background color for the form */
+      padding: 20px;
+    }
+    .form-container label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .submit-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container form-container">
+    <h1 class="text-center">Create New Lead</h1>
+    <form action="/leads?frontend=1" method="POST">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the name of the lead" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email"  placeholder="Enter the email of the lead" required>
+      </div>
+      <div class="form-group">
+        <label for="organizationUrl">Organization Url:</label>
+        <input type="text" class="form-control" id="organizationUrl" name="organisationUrl" placeholder="Enter organization URL" required>
+      </div>
+      <div class="form-group">
+        <label for="organizationUrl">Organization Name:</label>
+        <input type="text" class="form-control" id="organizationUrl"  name="organisationName" placeholder="Enter the name of the organisation" required>
+      </div>
+      <div class="form-group">
+        <label for="organizationUrl">Employee Count</label>
+        <input type="text" class="form-control" id="leadLinkedinId"   name="employeeCount" placeholder="Enter the number of employee in organisation" >
+      </div>
+      <div class="form-group">
+        <label for="organizationUrl">Industry Type</label>
+        <input type="text" class="form-control" id="leadLinkedinId"  name="industryType" placeholder="Enter organization's industry type" >
+      </div>
+      <div class="form-group">
+        <label for="organizationUrl">Keywords</label>
+        <input type="text" class="form-control" id="leadLinkedinId"  name="keywords" placeholder="Enter organization's associated keywords" >
+      </div>
+      <div class="form-group">
+        <label for="organizationUrl">Context</label>
+        <input type="text" class="form-control" id="leadLinkedinId"  name="context" placeholder="Enter some context about the organization" >
+      </div>
+      <div class="form-group">
+        <label for="organizationUrl">Prompt Alias</label>
+        <input type="text" class="form-control" id="leadLinkedinId"  name="promptAlias" placeholder="Enter the prompt to use for organization" >
+      </div>
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="autosend" name="autosend">
+        <label class="form-check-label" for="autosend">Auto Send</label>
+      </div>
+      <div class="submit-container">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+      <div id="error-container">
+        <% if (error) { %>
+          <p class="error-message"><%= error %></p>
+        <% } %>
+    </form>
+  </div>
+
+
+
+  <!-- Include Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
