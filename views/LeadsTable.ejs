@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prompts</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .table-container {
+      width: 80%;
+    }
+    th {
+      background-color: #f8f9fa;
+      border-color: #dee2e6;
+      text-align: center;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: middle;
+      text-align: center;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <div class="table-container">
+      <h3 class="text-center">Leads</h3>
+      <br>
+      <table class="table table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Lead Name</th>
+            <th scope="col">Organisation Name</th>
+            <th scope="col">Organisation Url</th>
+            <th scope="col">Email</th>
+            <th scope="col">Prompt</th>
+            <th scope="col">Status</th>
+            <th scope="col">AutoSend</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <% for (let i = 0; i < data.length; i++) { %>
+            <tr>
+                <th scope="row"><%= i %></th>
+              <td><%= data[i].leadName %></td>
+              <td><%= data[i].organisationName %></td>
+              <td><%= data[i].organisationUrl %></td>
+              <td><%= data[i].email %></td>
+              <td><%= data[i]?.prompt || "default" %></td>
+              <td><%= data[i]?.status %></td>
+              <td><%= data[i]?.autoSend || "false"%></td>
+
+            </tr>
+          <% } %>
+  
+        </tbody>
+      </table>
+  </div>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>

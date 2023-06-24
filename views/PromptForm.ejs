@@ -1,0 +1,83 @@
+<!-- form.html -->
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <title>Create New Prompt</title>
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f8f9fa; /* Slightly grey background color */
+    }
+    .form-container {
+      max-width: 400px;
+      width: 100%;
+      border: 1px solid #ccc; /* Border around the form */
+      border-radius: 4px;
+      background-color: #fff; /* White background color for the form */
+      padding: 20px;
+    }
+    .form-container label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .submit-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container form-container">
+    <h1 class="text-center">Create New Prompt</h1>
+    <form action="/prompt?frontend=1" method="POST">
+      <div class="form-group">
+        <label for="name">alias:</label>
+        <input type="text" class="form-control" id="alias" name="alias" placeholder="Enter the unique alias for the prompt" required>
+        <small id="aliasError" class="text-danger"></small>
+      </div>
+      <div class="form-group">
+        <label for="email">Prompt:</label>
+        <textarea type="email" class="form-control" id="prompt" name="prompt"  placeholder="Enter the prompt"  rows = 5required></textarea>
+      </div>
+      <div class="submit-container">
+        <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
+      </div>
+      <div class="form-group" id="error-container">
+        <% if (error) { %>
+          <p class="error-message"><%= error %></p>
+        <% } %>
+        </div>
+    </form>
+  </div>
+
+
+
+  <!-- Include Bootstrap JS -->
+</body>
+
+<script>
+    var usernameInput = document.getElementById('alias');
+    var usernameError = document.getElementById('aliasError');
+    var submitButton = document.getElementById('submitButton');
+
+    usernameInput.addEventListener('input', function() {
+      var username = usernameInput.value.trim();
+      if (username.includes(' ')) {
+        usernameError.textContent = 'alias should not contain spaces.';
+        submitButton.disabled = true;
+      } else {
+        usernameError.textContent = '';
+        submitButton.disabled = false;
+
+      }
+    });
+  </script>
+</html>

@@ -97,10 +97,10 @@ module.exports.generateEmail = async(details)=>{
         if(!getPrompt.success){
             throw new Error(getPrompt.message);
         }
-        if(!getPrompt.data){
+        if(!getPrompt.data || !getPrompt.data.length ){
             throw new Error('Invalid prompt Alias provided')
         }
-        content = getPrompt.data.prompt;
+        content = getPrompt.data[0].prompt;
     }
     const response = await openai.createChatCompletion({
         model,

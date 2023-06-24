@@ -86,7 +86,7 @@ router.get("/frontend/leadsForm",async(req, res)=>{
 
 router.get("/frontend/leadsUploadForm",async(req, res)=>{
     try {
-          return res.render('LeadsUploadForm', data);
+          return res.render('LeadsUploadForm', {});
 
     } catch (error) {
         res.status(500).json({success: false, message: error.message})
@@ -94,7 +94,8 @@ router.get("/frontend/leadsUploadForm",async(req, res)=>{
 })
 router.get("/frontend",async(req, res)=>{
     try {
-       return res.send("jello")
+        const leads = await find(req?.query || {});
+       return res.render("LeadsTable", {data:leads?.data|| []})
 
     } catch (error) {
         res.status(500).json({success: false, message: error.message})

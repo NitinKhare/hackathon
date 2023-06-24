@@ -3,7 +3,7 @@ const promptValidator = require("../validators/Prompt");
 
 module.exports.find = async (filter={})=>{
     try{
-        const result = await Prompt.findOne(filter);
+        const result = await Prompt.find(filter);
         return {success: true, data: result}
     }catch(e){
         console.log("error =====>", e.message)
@@ -22,7 +22,8 @@ module.exports.create = async (prompt)=>{
         if(!doesPromptExist.success){
             throw new Error(doesPromptExist.message);
         }
-        if(doesPromptExist.data){
+
+        if(doesPromptExist.data && doesPromptExist.data.length){
             throw new Error("Prompt already Exists")
         }
         let createdPrompt = new Prompt(prompt);
