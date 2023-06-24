@@ -59,11 +59,11 @@ router.get("/", async(req, res)=>{
 
 router.post("/bulk-upload",upload.single('data'), async(req, res)=>{
     try {   
+        console.log("bulk upload hit =====>", req.file, req.query)
         queue.add('bulkupload', {fileName: req.file.filename, autoSend: req.query.send})
-        if(req.query.frontend){
-            return res.redirect("/leads/frontend")
-        }
-        res.send()
+        
+        return res.redirect("/leads/frontend")
+        
     } catch (e) {
         return res.status(INTERNAL_SERVER_ERROR.code).json({
             success:false,

@@ -1,61 +1,54 @@
 <%- include('Navbar.ejs') %>
 
 <style>
-  .dropzone {
-    border: 2px dashed #ccc;
-    padding: 2rem;
-    text-align: center;
-    cursor: pointer;
-  }
+label {
+	display: block;
+	width: 60vw;
+	max-width: 300px;
+	margin: 0 auto;
+	background-color: rgb(100, 237, 159);
+	border-radius: 2px;
+	font-size: 1em;
+	line-height: 2.5em;
+	text-align: center;
+}
 
-  .dropzone.highlight {
-    background-color: #f7f7f7;
-  }
+label:hover {
+	background-color: rgb(90, 205, 174);
+}
 
-  .dropzone p {
-    margin-top: 1rem;
-    font-size: 1.2rem;
-  }
-</style>
+label:active {
+	background-color: mediumaquamarine;
+}
 
-<form action="/upload" method="POST" enctype="multipart/form-data">
+input {
+	border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px; 
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	width: 100vw;
+	overflow: hidden;
+	background-color: rgb(219, 213, 213);
+}
+  </style>
+
+<form action="/leads/bulk-upload?frontend=1" method="post" enctype="multipart/form-data">
   <div class="form-group">
-    <div class="dropzone" id="fileDropzone">
-      <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv" style="display: none;">
-      <p>Drag and drop a CSV file here or click to select.</p>
-    </div>
+    <label for="csvFile">Select CSV File:</label>
+    <input type="file" class="form-control-file" id="csvFile" name="data" accept=".csv" required>
   </div>
-  <button type="submit" class="btn btn-primary">Upload</button>
+  <div class="text-center">
+  <button type="submit" class="btn btn-primary text-center">Upload</button>
+</div>
 </form>
-
-<script>
-  var fileDropzone = document.getElementById('fileDropzone');
-
-  fileDropzone.addEventListener('dragenter', handleDragEnter);
-  fileDropzone.addEventListener('dragover', handleDragOver);
-  fileDropzone.addEventListener('dragleave', handleDragLeave);
-  fileDropzone.addEventListener('drop', handleDrop);
-
-  function handleDragEnter(event) {
-    event.preventDefault();
-    fileDropzone.classList.add('highlight');
-  }
-
-  function handleDragOver(event) {
-    event.preventDefault();
-  }
-
-  function handleDragLeave(event) {
-    event.preventDefault();
-    fileDropzone.classList.remove('highlight');
-  }
-
-  function handleDrop(event) {
-    event.preventDefault();
-    fileDropzone.classList.remove('highlight');
-
-    var files = event.dataTransfer.files;
-    var fileInput = document.getElementById('csvFile');
-    fileInput.files = files;
-  }
-</script>
