@@ -31,6 +31,8 @@
   </style>
 </head>
 <body>
+  <%- include('Navbar.ejs') %>
+
   <div class="table-container">
       <h3 class="text-center">Available Prompts</h3>
       <br>
@@ -47,7 +49,7 @@
 
           <% for (let i = 0; i < data.length; i++) { %>
             <tr>
-                <th scope="row"><%= i %></th>
+                <th scope="row"><%= i+1 %></th>
               <td><%= data[i].id %></td>
               <td><%= data[i].alias %></td>
               <td><%= data[i].prompt %></td>

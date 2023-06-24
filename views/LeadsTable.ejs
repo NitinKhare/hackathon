@@ -31,6 +31,7 @@
   </style>
 </head>
 <body>
+  <%- include('Navbar.ejs') %>
   <div class="table-container">
       <h3 class="text-center">Leads</h3>
       <br>
@@ -51,7 +52,7 @@
 
           <% for (let i = 0; i < data.length; i++) { %>
             <tr>
-                <th scope="row"><%= i %></th>
+                <th scope="row"><%= i+1 %></th>
               <td><%= data[i].leadName %></td>
               <td><%= data[i].organisationName %></td>
               <td><%= data[i].organisationUrl %></td>

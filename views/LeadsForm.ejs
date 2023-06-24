@@ -33,6 +33,7 @@
   </style>
 </head>
 <body>
+  <%- include('Navbar.ejs') %>
   <div class="container form-container">
     <h1 class="text-center">Create New Lead</h1>
     <form action="/leads?frontend=1" method="POST">
@@ -90,9 +91,7 @@
         <% } %>
         </div>
     </form>
-  </div>
-
-
+</div>
 
   <!-- Include Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
