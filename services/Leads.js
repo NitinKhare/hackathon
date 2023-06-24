@@ -4,6 +4,9 @@ const leadsValidator = require('../validators/Leads');
 module.exports.create = async (leadObject)=>{
     try{
         const isValid= leadsValidator.create.validate(leadObject);
+        if(!leadObject?.promptAlias && leadObject?.prompt){
+            leadObject.promptAlias = leadObject?.prompt
+        }
         if(isValid.error){
             throw new Error(isValid.error.message)
         }
