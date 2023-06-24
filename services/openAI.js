@@ -91,7 +91,7 @@ module.exports.generateEmail = async(details)=>{
 
     let text = parseDetailsAsPrompt(details)
     let content= 'You are an expert cold email writer. Your task is to generate personalized cold email on the basis of customer Data and infromation we provide to you to sell our product which is named Plum Here is the description about Plum :'+ABOUT_PLUM + " Generated email must be formatted and should not contain any escape sequence characters";
-
+    console.log("openAI ======>", details.promptAlias)
     if(details.promptAlias){
         const getPrompt = await find({alias: details.promptAlias});
         if(!getPrompt.success){
@@ -101,6 +101,7 @@ module.exports.generateEmail = async(details)=>{
             throw new Error('Invalid prompt Alias provided')
         }
         content = getPrompt.data[0].prompt;
+        console.log("content to use =====>", content)
     }
     const response = await openai.createChatCompletion({
         model,
