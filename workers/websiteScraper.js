@@ -99,6 +99,7 @@ const generateEmailContent = async (orgInfoId, leadId) =>{
         if(!leadId){
             throw new Error("No LeadId found");
         }
+        console.log("Befpre ===>", 102)
         const email = await generateEmail({
             email : lead.email,
             LeadName: lead.name,
@@ -110,6 +111,7 @@ const generateEmailContent = async (orgInfoId, leadId) =>{
             abmName: lead.abmName || "Sarvesh Singh",
             promptAlias: lead.promptAlias
         })
+        console.log("AFTER ======>", 114)
         //parsing logic
         let textMessage =  email.message.split('\n')
         let subject = toTitleCase(textMessage[0].split(`Subject:`).pop())
@@ -126,9 +128,10 @@ const generateEmailContent = async (orgInfoId, leadId) =>{
             emailBody: text,
             autoSend: lead.autoSend || false
         })
-        if(lead.autoSend){
-            queue.add("mail", {id: createdEmail.data._id})
-        }
+        console.log("========>", 132)
+ 
+        queue.add("mail", {id: createdEmail.data._id})
+
 
     }catch(e){
         console.log("error in generating email ======>", JSON.stringify(e, null, 2))

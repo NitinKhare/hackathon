@@ -41,7 +41,6 @@
             <th scope="col">email</th>
             <th scope="col">Email Subject</th>
             <th scope="col">Email Body</th>
-            <th scope="col">AutoSend</th>
             <th scope="col">Delivered</th>
             <th scope="col">View</th>
           </tr>
@@ -55,7 +54,6 @@
               <td><%= data[i].email %></td>
               <td><%= data[i].emailSubject %></td>
               <td><%= data[i].emailBody.substring(0, 150) %></td>
-              <td><%= data[i]?.autoSend %></td>
               <td><%= data[i]?.emailSent %></td>
               <td><a href="/email/<%= data[i]._id %>/frontend">Details</a></td>
             </tr>

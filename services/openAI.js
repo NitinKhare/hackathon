@@ -1,6 +1,7 @@
 require('dotenv').config({path:__dirname+'/../.env'})
 const { Configuration, OpenAIApi } = require("openai");
 const { find } = require('./Prompt');
+const queue = require('../queue');
 const configuration = new Configuration({
     organization: process.env.OPENAI_ORG_ID,
     apiKey: process.env.OPENAI_API_KEY,
@@ -88,10 +89,10 @@ function parseDetailsAsPrompt(details){
 }
 
 module.exports.generateEmail = async(details)=>{
-
+    try{
     let text = parseDetailsAsPrompt(details)
     let content= 'You are an expert cold email writer. Your task is to generate personalized cold email on the basis of customer Data and infromation we provide to you to sell our product which is named Plum Here is the description about Plum :'+ABOUT_PLUM + " Generated email must be formatted and should not contain any escape sequence characters";
-    console.log("openAI ======>", details.promptAlias)
+    console.log("openAI ======>", details)
     if(details.promptAlias){
         const getPrompt = await find({alias: details.promptAlias});
         if(!getPrompt.success){
@@ -103,19 +104,25 @@ module.exports.generateEmail = async(details)=>{
         content = getPrompt.data[0].prompt;
         console.log("content to use =====>", content)
     }
+    console.log("respone ====BEFIRE=>", content, details)
+    const companyName = details.companyName
     const response = await openai.createChatCompletion({
         model,
         messages:[{
             'role': 'system',
-            content: content
+            content
         },{
             role: 'user',
-            content: `Write me a email selling our product plum to the company named ${details.companyName}, here is the description we found about the company, `+text +". Add personal touch based on the description we gave to you in the email"
+            content: `Write me a email selling our product plum to the company named ${companyName}, here is the description we found about the company, `+text +". Add personal touch based on the description we gave to you in the email"
         }],
         temperature,
       });
       if(response?.data?.choices[0]?.message?.content){
-        return {success: true, message: `${response?.data?.choices[0]?.message?.content}`}
+        return {success: true, message: response?.data?.choices[0]?.message?.content}
       }
-      return response.data;
+      return {success: false, message:"Unable to generate"}
+    }catch(e){
+        console.log("HERE ==========>")
+        console.error(e)
+    }
     } 

@@ -29,10 +29,13 @@ router.post("/", async(req, res)=>{
     try{
         console.log("Creationg data =======>", req.body)
         const created = await create(req.body)
+        
         if(created.success == false){
-            return res.render('LeadsForm', {error : created.message, data:req.body});
+            req.error = created.message;
+            return res.redirect("/leads/frontend/leadsForm")
         }
         if(req.query.frontend){
+    
             return res.redirect("/leads/frontend")
         }
         return res.json(created)
@@ -75,10 +78,10 @@ router.post("/bulk-upload",upload.single('data'), async(req, res)=>{
 router.get("/frontend/leadsForm",async(req, res)=>{
     try {
         const data = {
-            error:null
+            error:req?.error || null
           };
           const getAllPrompt = await prompt.find();
-          return res.render('LeadsForm', {...data, prompts: getAllPrompt?.data || []});
+          return res.render('LeadsForm',{...data, prompts: getAllPrompt?.data || []} );
 
     } catch (error) {
         res.status(500).json({success: false, message: error.message})
@@ -95,6 +98,7 @@ router.get("/frontend/leadsUploadForm",async(req, res)=>{
 })
 router.get("/frontend",async(req, res)=>{
     try {
+        console.log("Here de=====>")
         const leads = await find(req?.query || {});
        return res.render("LeadsTable", {data:leads?.data|| []})
 

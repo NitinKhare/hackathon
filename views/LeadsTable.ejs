@@ -45,7 +45,6 @@
             <th scope="col">Email</th>
             <th scope="col">Prompt</th>
             <th scope="col">Status</th>
-            <th scope="col">AutoSend</th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +58,6 @@
               <td><%= data[i].email %></td>
               <td><%= data[i]?.prompt || "default" %></td>
               <td><%= data[i]?.status %></td>
-              <td><%= data[i]?.autoSend || "false"%></td>
 
             </tr>
           <% } %>
