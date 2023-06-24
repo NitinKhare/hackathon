@@ -185,7 +185,8 @@ const parseCSV = async(csvFileBuffer) =>{
                 autoSend: csvFileBuffer.send,
                 email:data["Email"],
                 leadDesignation: csvFileBuffer["Title"],
-                autoSend: csvFileBuffer.autoSend
+                autoSend: csvFileBuffer.autoSend,
+                promptAlias: csvFileBuffer["promptAlias"]
             }
             await leads.create(leadObject)
         })
