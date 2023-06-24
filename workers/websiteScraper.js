@@ -99,7 +99,7 @@ const generateEmailContent = async (orgInfoId, leadId) =>{
         if(!leadId){
             throw new Error("No LeadId found");
         }
-        console.log("Befpre ===>", 102)
+        console.log("Befpre ===>", 102, lead.promptAlias)
         const email = await generateEmail({
             email : lead.email,
             LeadName: lead.name,
@@ -170,6 +170,7 @@ const parseCSV = async(csvFileBuffer) =>{
         fs.createReadStream(__dirname+'/../uploads/'+csvFileBuffer.fileName)
         .pipe(csv())
         .on('data', async (data) => {
+            console.log(data);
             const leadObject = {
                 organisationName: data.Company,
                 organisationUrl: data.Website,
@@ -182,13 +183,13 @@ const parseCSV = async(csvFileBuffer) =>{
                 State: data["State"],
                 Country: data["Country"],
                 CompanyAddresss: data["Company Address"],
-                autoSend: csvFileBuffer.send,
+                autoSend: true,
                 email:data["Email"],
-                leadDesignation: csvFileBuffer["Title"],
-                autoSend: csvFileBuffer.autoSend,
-                promptAlias: csvFileBuffer["promptAlias"]
+                leadDesignation: data["Title"],
+                promptAlias: data["promptAlias"]
             }
-            await leads.create(leadObject)
+            console.log("leadObject -----> ",leadObject)
+            const x = await leads.create(leadObject)
         })
         .on('end', () => {
           console.log(results);
