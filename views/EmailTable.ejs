@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prompts</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .table-container {
+      width: 80%;
+    }
+    th {
+      background-color: #f8f9fa;
+      border-color: #dee2e6;
+      text-align: center;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: middle;
+      text-align: center;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <%- include('Navbar.ejs') %>
+  <div class="table-container">
+    <br>
+      <h3 class="text-center">EMAILS</h3>
+      <br>
+      <table class="table table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Organisation ID</th>
+            <th scope="col">email</th>
+            <th scope="col">Email Subject</th>
+            <th scope="col">Email Body</th>
+            <th scope="col">AutoSend</th>
+            <th scope="col">Delivered</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <% for (let i = 0; i < data.length; i++) { %>
+            <tr>
+                <th scope="row"><%= i+1 %></th>
+              <td><%= data[i].organisationInfo %></td>
+              <td><%= data[i].email %></td>
+              <td><%= data[i].emailSubject %></td>
+              <td><%= data[i].emailContent %></td>
+              <td><%= data[i]?.autoSend %></td>
+              <td><%= data[i]?.emailSent %></td>
+            </tr>
+          <% } %>
+  
+        </tbody>
+      </table>
+  </div>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>

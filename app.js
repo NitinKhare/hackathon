@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
-  res.send('ABM CAMPAIGN RUNNER');
+  res.redirect("/leads/frontend");
 })
 
 

@@ -1,5 +1,5 @@
 var express = require('express');
-const { createEmailReceived, sendEmailViaId } = require('../services/Email');
+const { createEmailReceived, sendEmailViaId, find } = require('../services/Email');
 var router = express.Router();
 
 
@@ -26,6 +26,16 @@ router.get("/send-email/:id", async(req, res)=>{
             success:false,
             message: e.message
         })
+    }
+})
+
+router.get("/frontend",async(req, res)=>{
+    try {
+        const emails = await find(req?.query || {});
+       return res.render("EmailTable", {data:emails?.data|| []})
+
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message})
     }
 })
 
