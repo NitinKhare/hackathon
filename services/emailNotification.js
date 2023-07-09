@@ -21,6 +21,7 @@ const mailOptions = {
   */
 module.exports.sendEmail = (mailOptions)=>{
     return new Promise((resolve, reject)=>{
+      console.log("Sending email")
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log("Emaik sending failked error =====>", error)

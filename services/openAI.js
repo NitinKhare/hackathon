@@ -12,24 +12,38 @@ const model = "gpt-3.5-turbo"
 const temperature = 0.8
 
 const ABOUT_PLUM = `
-Introduce me as Sarvesh, co-founder at Plum. Pitch Plum to cater 
-to the company's end-to-end healthcare landscape. Mention that Plum is an insurtech company funded by Sequoia
- and Tiger Global. Plum has 3000+ customers including 20+ unicorns. Limit the subject line to 6 words.
-  The pitch must include USP in 3 bullets. Each bullet must have only a single line and be within 10
-   words. The USPs of Plum are: Comprehensive medical insurance from India’s leading insurers and a
-    suite of preventive health benefits, Modern benefits including LGBTQ cover and mental illness 
-    cover, Plum mobile application to increase employee adoption and HRMS integration for the ease
-     of HR operations, Assisted claims filing through WhatsApp and 24*7 cashless support.
-      Write a personalised email. Email must be under 100 words. The email must be creative and 
-      formal.
-The email must not include the below texts: ‘I hope this email finds you’ and 
-‘Thank you for considering Plum as your trusted partner in enhancing your employee health 
-insurance
+Write a personalised cold email to a prospect.
 
-    Whenever you generate a cold email add a personal touch with the 
-    information of the company we provide you with. Talk more about the company we are selling to then about Plum and partenering with Plum can 
-    help them.
-`;
+Goal: 
+to elicit a response from the prospect.
+
+Objectives:
+Given the additional context below, use personalisation and a targeted approach to engage the prospect.
+Persuade them to take action by replying to the email
+Establish trust and credibility by using the below pointers on Plum
+
+Context about Plum, trust, credibility and its USP:
+Plum is an insurtech company funded by Sequoia and Tiger Global.
+Plum has 3000+ customers including 20+ unicorns
+Plum provides comprehensive medical insurance from India's leading insurance manufacturers and a suite of preventive health benefits for employees.
+Plum's mobile application increases employee adoption and hence, employees value corporate-sponsored benefits
+Plum has HRMS integrations for ease of HR operations
+Plum provides assisted claims filing through WhatsApp and 24*7 cashless support
+
+Context about prospect:
+[variable_text_about_prospect]
+
+Instructions for writing:
+Write a clear and compelling email
+Limit the subject line to 6 words
+Plum's pitch must include the USPs and trust factors in 3 bullet points
+Each bullet point must have only a single line and be within 10 words
+Email must be under 200 words 
+Email should be creative and yet formal
+Introduce me as [variable_name] from Plum
+
+Remember:
+When personalising the email, only write about employee health insurance and health benefits, do not make up any other insurance product.`;
 /*
 Structure of details
 {
@@ -91,8 +105,8 @@ function parseDetailsAsPrompt(details){
 module.exports.generateEmail = async(details)=>{
     try{
     let text = parseDetailsAsPrompt(details)
-    let content= 'You are an expert cold email writer. Your task is to generate personalized cold email on the basis of customer Data and infromation we provide to you to sell our product which is named Plum Here is the description about Plum :'+ABOUT_PLUM + " Generated email must be formatted and should not contain any escape sequence characters";
-    console.log("openAI ======>", details)
+    let content= ABOUT_PLUM;
+    console.log("openAI ======>", content)
     if(details.promptAlias){
         const getPrompt = await find({alias: details.promptAlias});
         if(!getPrompt.success){

@@ -19,6 +19,7 @@ const worker = new Worker('leads', async job => {
     try{
     console.log("job ======>", job.name, job.data)
     if(job.name == 'lead'){
+        console.log("creating leads ====>")
         const lead = await Leads.findById(job.data.id)
         if(!lead){
             throw new Error(`Invalid lead with id : ${job.data.id}`)
@@ -50,6 +51,7 @@ const worker = new Worker('leads', async job => {
                 OrganisationInfoObject.websiteAboutPageData = null;
             }
         }
+        console.log("upserting")
         await upsertOrganisationInfo(lead, OrganisationInfoObject);
         await Leads.findByIdAndUpdate(lead._id, {status: "PROCESSED"})
     }
@@ -134,7 +136,7 @@ const generateEmailContent = async (orgInfoId, leadId) =>{
 
 
     }catch(e){
-        console.log("error in generating email ======>", JSON.stringify(e, null, 2))
+        console.log("error in generating email ======>", e)
         return {success: false, message: e.message}
     }
 }
@@ -165,12 +167,10 @@ try{
 }
 const parseCSV = async(csvFileBuffer) =>{
     try {
-        let results = [];
-        console.log()
+        console.log("parseCSV called")
         fs.createReadStream(__dirname+'/../uploads/'+csvFileBuffer.fileName)
         .pipe(csv())
         .on('data', async (data) => {
-            console.log(data);
             const leadObject = {
                 organisationName: data.Company,
                 organisationUrl: data.Website,
@@ -189,10 +189,11 @@ const parseCSV = async(csvFileBuffer) =>{
                 promptAlias: data["promptAlias"]
             }
             console.log("leadObject -----> ",leadObject)
-            const x = await leads.create(leadObject)
+            await leads.create(leadObject)
         })
         .on('end', () => {
-          console.log(results);
+         console.log("deleting ", __dirname+'/../uploads/'+csvFileBuffer.fileName)
+          fs.unlinkSync(__dirname+'/../uploads/'+csvFileBuffer.fileName);
         });    } catch (error) {
         console.log(error)
         return {success: false, message: error.message}

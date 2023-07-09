@@ -62,7 +62,6 @@ router.get("/", async(req, res)=>{
 
 router.post("/bulk-upload",upload.single('data'), async(req, res)=>{
     try {   
-        console.log("bulk upload hit =====>", req.file, req.query)
         queue.add('bulkupload', {fileName: req.file.filename, autoSend: req.query.send})
         
         return res.redirect("/leads/frontend")

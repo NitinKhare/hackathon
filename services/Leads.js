@@ -3,8 +3,8 @@ const queue = require('../queue');
 const leadsValidator = require('../validators/Leads');
 module.exports.create = async (leadObject)=>{
     try{
+        console.log("leads create called ====>")
         const isValid= leadsValidator.create.validate(leadObject);
-        console.log("Insiede create lead ======>", leadObject)
         if(!leadObject?.promptAlias && leadObject?.prompt){
             leadObject.promptAlias = leadObject?.prompt
         }
@@ -18,9 +18,10 @@ module.exports.create = async (leadObject)=>{
         if(!doesLeadExist.success){
             return {success: false, message: 'DB_ERROR'}
         }
-        if(doesLeadExist.data.length){
-            return {success: false, message: 'Lead already exists'};
-        }
+        // if(doesLeadExist.data.length){
+        //     console.log("jhere ====>");
+        //     return {success: false, message: 'Lead already exists'};
+        // }
         if(!leadObject.aboutPage){
             leadObject.aboutPage = leadObject.organisationUrl[leadObject.organisationUrl.length - 1] =="/" ? leadObject.organisationUrl+"about" : leadObject.organisationUrl+"/about"
         }
